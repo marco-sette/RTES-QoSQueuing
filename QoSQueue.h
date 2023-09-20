@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <pthread.h>
+#include <semaphore.h>
+#include "Examples.h"
+
 
 // Here we define all the return values of the functions
 typedef enum
