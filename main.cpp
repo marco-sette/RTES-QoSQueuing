@@ -1,16 +1,19 @@
 #include <iostream>
 #include <stdio.h>
 #include "Examples.h"
+using namespace std;
+
+
 
 int main() {
     
     std::cout << "RTES Project" << std::endl;
 
     std::cout << "Testing writing on the queue" << std::endl;
-    WRITE_EXAMPLE();
+    //WRITE_EXAMPLE();
 
     std::cout << "Testing reading from the queue" << std::endl;
-    READ_EXAMPLE();
+    //READ_EXAMPLE();
 
     //std::cout << "Test: Hello World!" << std::endl;
     return 0;
