@@ -19,7 +19,7 @@ typedef struct DS_buffer_t {
 
     int32_t ind_head, ind_tail;
 
-    size_t max_elements, num_elements, size_elements;
+    size_t max_elements, num_elements, size_elements; // # of elements, massimo # of elements, dimension elem
 
 } DS_buffer_t;
 

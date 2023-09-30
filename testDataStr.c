@@ -60,26 +60,99 @@ statesDS_t DS_Empty(DS_buffer_t *buffer){
 
 
 statesDS_t DS_Delete(DS_buffer_t *buffer){
-    //ricordarsi di lavorare sulla FREE prima di eliminare!!!
-    ; //TODO
+    statesDS_t temp_ret = false_DS;
+
+    int temp_ret_sem = sem_wait(buffer->sem);
+
+    DS_sem_t temp_sem = buffer->sem;
+
+    //controlli -> free or exit
+    if (buffer == NULL) {
+        temp_ret = true_DS;
+    } else {
+        free(buffer);
+    } 
+    if (buffer->ptrBfr_start != NULL) {
+        free (buffer->ptrBfr_start);
+    }
+    if (temp_ret_sem != 1) {
+        return error_DS;
+    }
+
+    sem_post(temp_sem);
+    sem_close(temp_sem);
+    return temp_ret;
 }
 
 
 void DS_GetHead(DS_buffer_t *buffer){
-    //wait
-    //accesso, memorizzo
-    //signal
-    ; //TODO
+    if(buffer == NULL){
+        return NULL;
+    }
+    if (DS_Full(buffer) == true_DS || DS_Full(buffer) == error_DS) {        //full buffer
+        return NULL;
+    }
+
+    int temp_ret_sem = sem_wait(buffer->sem);
+    if(temp_ret_sem != 1) {
+        return NULL;
+    }
+
+    void *temp_ret = (uint8_t*)buffer->ptrBfr_start + (buffer->ind_head * buffer->size_elements);
+
+    buffer->ind_head = (buffer->ind_head + 1) % buffer->max_elements;
+    buffer->num_elements++;
+
+    if (buffer->num_elements > buffer->max_elements) {          // error
+        temp_ret = NULL;
+    }
+
+    sem_post(buffer->sem);
+    return temp_ret;
 }
 
 void DS_GetTail(DS_buffer_t *buffer){
-	//lo stesso di gethead
-    ; //TODO
+    if(buffer == NULL){
+        return NULL;
+    }
+    if (DS_Empty(buffer) == true_DS || DS_Empty(buffer) == error_DS) {              //buffer empty
+        return NULL;
+    }
+
+    int temp_ret_sem = sem_wait(buffer->sem);
+
+    if (temp_ret_sem != 1) {
+        return NULL;
+    }
+
+    void *temp_ret = (uint8_t*)buffer->ptrBfr_start + (buffer->ind_tail * buffer->size_elements);
+
+    buffer->ind_tail = (buffer->ind_tail + 1) % buffer->max_elements;
+    buffer->num_elements--;
+    if (buffer->num_elements < 0){          //zero elements
+        temp_ret = NULL;
+    }
+    sem_post(buffer->sem);
+    return temp_ret;
 }
 
 size_t DS_GetRemainingSpace(DS_buffer_t *buffer) {
-    //post e wait per l'accesso in ME
-    ; //TODO
+
+    size_t temp_ret = 0;
+    int temp_ret_sem = sem_wait(buffer->sem);
+
+    //casi limite
+    if(buffer == NULL || temp_ret_sem != 1){	//esco subito
+        return 0;
+    }
+
+    //calcolo
+    if(buffer->max_elements >= buffer->num_elements) {
+        temp_ret = buffer->max_elements - buffer->num_elements;
+    }
+
+    sem_post(buffer->sem);
+    return temp_ret;
 }
 
 
