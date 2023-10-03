@@ -1,5 +1,7 @@
-#ifdef EXAMPLES_H
-#define EXAMPLES_H
+//#ifdef EXAMPLES_H
+//#define EXAMPLES_H
+
+#pragma once
 
 #include <stddef.h>
 
@@ -13,4 +15,4 @@ void shuffle(void *array[], size_t n);
 #define WRITE_EXAMPLE()
 #define READ_EXAMPLE()
 
-#endif // EXAMPLES_H
+//#endif // EXAMPLES_H

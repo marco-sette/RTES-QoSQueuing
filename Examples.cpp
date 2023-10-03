@@ -6,8 +6,8 @@
 #include <semaphore.h>
 #include <unistd.h>
 
-#include "Examples.h"
-#include "QoSQueue.h"
+#include "Examples.hpp"
+#include "QoSQueue.hpp"
 
 // A function that shuffles the elements of an array till n
 void shuffle (void *array[], size_t n)

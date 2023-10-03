@@ -1,4 +1,4 @@
-#include "testDataStr.h"
+#include "DataStr.hpp"
 #include <stdio.h>
 
 DS_buffer_t *DS_Init(const char *name_Init, const size_t numMaxElements, const size_t sizeElement) {
