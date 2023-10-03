@@ -5,7 +5,9 @@
 #include <stddef.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include "Examples.h"
+#include "Examples.hpp"
+
+#include "DataStr.hpp"
 
 
 // Here we define all the return values of the functions
@@ -16,6 +18,8 @@ typedef enum
     QUEUE_EMPTY,
     QUEUE_ERROR = -1,
 } QoSQueueReturn_t;
+
+typedef sem_t* Queue_sem_t;
 
 // Struct used to handle the queue
 typedef struct
@@ -28,6 +32,7 @@ typedef struct
 // New handler 
 typedef Handler_t *QueueHandle_t;
 
+
 // Create a new queue, given the size of the queue, a name and the size of the elements
 QueueHandle_t xQueueCreate(const size_t queueSize, const size_t elemSize, const char *name);
 
@@ -39,11 +44,13 @@ QoSQueueReturn_t xQueue_IsEmpty(QueueHandle_t queue);
 
 // Put an element in the queue
 QoSQueueReturn_t xQueue_Put(QueueHandle_t queue, const void *ptrElem);
-
+   
 // Get an element from the queue
 QoSQueueReturn_t xQueue_Get(QueueHandle_t queue, void *ptrDest);
 
 // Delete the queue
 QoSQueueReturn_t xQueue_Delete(QueueHandle_t queue);
+
+
 
 #endif /* QOSQUEUE_H_ */
