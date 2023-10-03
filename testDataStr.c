@@ -10,7 +10,7 @@ DS_buffer_t *DS_Init(const char *name_Init, const size_t numMaxElements, const s
     DS_buffer_t *temp_ret = (DS_buffer_t*) malloc (sizeof(DS_buffer_t));
     uint8_t *buff = (uint8_t*) malloc (numMaxElements * sizeElement);
 
-    temp_ret -> sem = sem_init(1, &name_Init);	// gli viene passato - ovvio
+    temp_ret -> sem = sem_init(name_Init, 0, 1);	// gli viene passato - ovvio
     temp_ret -> ptrBfr_start = buff;
     temp_ret -> ind_head = 0;
     temp_ret -> ind_tail = 0;
