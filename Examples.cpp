@@ -1,3 +1,6 @@
+using namespace std;
+#include <iostream>
+
 #include "Examples.hpp"
 
 sem_t mutex, write_sem, read_sem;
@@ -51,7 +54,7 @@ void *writer(void *arg)
         tmp = randomInt(0, 100);                // Generate a random integer
         DataStruct* data = newData(0, tmp);         // Create a new Data object
         xQueue_Put(queue, data);                    // Put the Data object on the bottom of the queue
-        printf("Writer[%lu]: \"Written %d on the queue.\"\n", pthread_self(), tmp);
+        std::cout << "Writer[" << pthread_self() << "]: \"Written " << tmp << " on the queue.\"" << std::endl;
     }
     return NULL;
 }
@@ -66,7 +69,7 @@ void *reader (void *arg)
         DataStruct* data = (DataStruct*)xQueue_Get(queue);      // Get the Data object from the top of the queue
         if(data != NULL)
         {
-            printf("Reader[%lu]: \"Read %d from the queue.\"\n", pthread_self(), data->value);
+            std::cout << "Reader[" << pthread_self() << "]: \"Read "<< data->value <<" from the queue.\"" << std::endl;
             //printData(data);
             destroyData(data);
         }
@@ -114,8 +117,7 @@ void Queue_test(void)
 
     xQueue_Delete(queue);
 
-    printf("Queue test completed.\n");
-    printf("\n");
+    std::cout << "Queue test completed." << std::endl << std::endl;
 }
 
 void Queue_test2(int writers, int readers, int size, int writer_iterations, int reader_iterations)
@@ -160,8 +162,7 @@ void Queue_test2(int writers, int readers, int size, int writer_iterations, int 
 
     xQueue_Delete(queue);
 
-    printf("Queue test completed.\n");
-    printf("\n");
+    std::cout << "Queue test completed."  << std::endl << std::endl;
 
 }
 

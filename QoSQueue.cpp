@@ -1,3 +1,6 @@
+using namespace std;
+#include <iostream>
+
 #include "QoSQueue.hpp"
 
 // Queue initialization
@@ -29,7 +32,7 @@ void xQueue_Put (CircularQueue_t *queue, void *data)
 {
     if (xQueue_IsFull(queue)) 
     {
-        printf("Writer[%lu]: \"Queue is full! Cannot add anymore.\"\n", pthread_self());
+        std::cout << "Writer[" << pthread_self() << "]: \"Queue is full! Cannot add anymore.\"" << std::endl;
         return;
     }
     
@@ -49,7 +52,7 @@ void* xQueue_Get (CircularQueue_t *queue)
 {
     if (xQueue_IsEmpty(queue)) 
     {
-        printf("Reader[%lu]: \"Queue is empty! Cannot extract.\"\n", pthread_self());
+        std::cout << "Reader[" << pthread_self() << "]: \"Queue is empty! Cannot extract.\"\n" << std::endl;
         return NULL;
     }
     

@@ -1,3 +1,6 @@
+using namespace std;
+#include <iostream>
+
 #include "DataStr.hpp"
 
 // Function to create a new Data object
@@ -19,7 +22,7 @@ void destroyData(DataStruct* data)
 // Function to print a Data object
 void printData(DataStruct* data)
 {
-    printf("Data: %d\n", data->type);
+    std::cout << "Data: " << data->type << "." << std::endl;
     // Add specific data fields here
     // For example, printf("Data: %d\n", data->value);
 }
