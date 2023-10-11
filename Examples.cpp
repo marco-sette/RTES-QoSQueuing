@@ -2,6 +2,13 @@
 
 sem_t mutex, write_sem, read_sem;
 
+int N_WRITERS = 15;
+int N_READERS = 15;
+int MAX_SIZE = 10;
+int N_WRITER_ITERATIONS = 10;
+int N_READER_ITERATIONS = 10;
+
+
 // A function that shuffles the elements of an array till n
 void shuffle (void *array[], size_t n)
 {
@@ -38,7 +45,7 @@ void *writer(void *arg)
 {
     CircularQueue_t* queue = (CircularQueue_t*)arg;
     int i;
-    for (i = 0; i < 10; i++)
+    for (i = 0; i < N_WRITER_ITERATIONS; i++)
     {
         int tmp = randomInt(0, 100);                // Generate a random integer
         DataStruct* data = newData(0, tmp);         // Create a new Data object
@@ -53,7 +60,7 @@ void *reader (void *arg)
 {
     CircularQueue_t* queue = (CircularQueue_t*)arg;
     int i;
-    for (i = 0; i < 10; i++)
+    for (i = 0; i < N_READER_ITERATIONS; i++)
     {
         DataStruct* data = (DataStruct*)xQueue_Get(queue);      // Get the Data object from the top of the queue
         if(data != NULL)
@@ -108,4 +115,58 @@ void Queue_test(void)
     xQueue_Delete(queue);
 
     printf("Queue test completed.\n");
+    printf("\n");
 }
+
+void Queue_test2(int writers, int readers, int size, int writer_iterations, int reader_iterations)
+{
+    srand((unsigned int)time(NULL));
+    pthread_t writers_t[writers];
+    pthread_t readers_t[readers];
+
+    sem_init(&mutex, 0, 1);
+    sem_init(&write_sem, 0, 1);
+    sem_init(&read_sem, 0, 1);
+
+    CircularQueue_t* queue = xQueue_Init(size);
+
+    N_WRITER_ITERATIONS = writer_iterations;
+    N_READER_ITERATIONS = reader_iterations;
+
+    int i;
+    for( i = 0; i < writers; i++)
+    {
+        pthread_create(&writers_t[i], NULL, writer, queue);
+    }
+
+    for( i = 0; i < readers; i++)
+    {
+        pthread_create(&readers_t[i], NULL, reader, queue);
+    }
+
+    for( i = 0; i < writers; i++)
+    {
+        pthread_join(writers_t[i], NULL);
+    }
+
+    for( i = 0; i < readers; i++)
+    {
+        pthread_join(readers_t[i], NULL);
+    }
+
+    sem_destroy(&mutex);
+    sem_destroy(&write_sem);
+    sem_destroy(&read_sem);
+
+    xQueue_Delete(queue);
+
+    printf("Queue test completed.\n");
+    printf("\n");
+
+}
+
+void Queue_Manual(int writers, int readers, int size, int writer_iterations, int reader_iterations)
+{
+    
+}
+

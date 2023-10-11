@@ -4,7 +4,7 @@ API functions that allows using QoS policies on thread-safe FIFO queuing (with g
 A Real Time Embedded Systems' project @ UniMoRe
 
 # Dependencies
-- You'll need gcc to compile
+- You'll need g++ to compile
 - Doesn't work on macOS (cause some functions are deprecated, like sem_init)
 
 # Instruction

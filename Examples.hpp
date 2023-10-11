@@ -15,14 +15,12 @@
 
 void shuffle(void *array[], size_t n);
 
-#define N_WRITERS 15
-#define N_READERS 20
-#define MAX_SIZE 50
 
+void* writer(void *arg);
+void* reader(void *arg);
 
-void* producer(void *arg);
-void* consumer(void *arg);
 void Queue_test(void);
+void Queue_test2(int N_WRITERS, int N_READERS, int MAX_SIZE, int N_WRITER_ITERATIONS, int N_READER_ITERATIONS);
 
 
 //#endif // EXAMPLES_H
