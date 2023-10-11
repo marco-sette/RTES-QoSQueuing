@@ -18,13 +18,12 @@ int main()
             std::cout << "Choose an option:\n";
             std::cout << "1. Run the example (history: keep all(max=10), depth: unused)\n";
             std::cout << "2. Choose your own parameteres and run the example\n";
-            std::cout << "3. Choose your own parameters and work on your own\n";
-            std::cout << "4. Exit\n";
+            std::cout << "3. Exit\n";
             std::cout << "Your choice: ";
             std::cin >> mainchoice;
-            if(mainchoice < 1 || mainchoice > 4)
+            if(mainchoice < 1 || mainchoice > 3)
                 std::cout << "Invalid choice. Try again......\n";
-        }while(mainchoice < 1 || mainchoice > 4);
+        }while(mainchoice < 1 || mainchoice > 3);
 
         switch(mainchoice)
         {
@@ -59,9 +58,6 @@ int main()
                 break;
 
             case 3:
-                break;
-        
-            case 4:
                 std::cout << "Exiting\n";
                 break;
         
