@@ -29,7 +29,7 @@ void xQueue_Put (CircularQueue_t *queue, void *data)
 {
     if (xQueue_IsFull(queue)) 
     {
-        printf("Queue is full! Cannot add anymore.\n");
+        printf("Writer[%lu]: \"Queue is full! Cannot add anymore.\"\n", pthread_self());
         return;
     }
     
@@ -49,7 +49,7 @@ void* xQueue_Get (CircularQueue_t *queue)
 {
     if (xQueue_IsEmpty(queue)) 
     {
-        printf("Queue is empty! Cannot extract.\n");
+        printf("Reader[%lu]: \"Queue is empty! Cannot extract.\"\n", pthread_self());
         return NULL;
     }
     

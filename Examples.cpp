@@ -44,14 +44,14 @@ static void pausetta (const unsigned int lower, const unsigned int upper)
 void *writer(void *arg)
 {
     CircularQueue_t* queue = (CircularQueue_t*)arg;
-    int i;
+    int i, tmp;
     for (i = 0; i < N_WRITER_ITERATIONS; i++)
     {
-        int tmp = randomInt(0, 100);                // Generate a random integer
+        pausetta(1000, 5000);                         // Pause for a random time
+        tmp = randomInt(0, 100);                // Generate a random integer
         DataStruct* data = newData(0, tmp);         // Create a new Data object
         xQueue_Put(queue, data);                    // Put the Data object on the bottom of the queue
-        printf("Writer[%lu]: written %d on the queue.\n", pthread_self(), tmp);     // Print the value written
-        pausetta(100, 500);                         // Pause for a random time
+        printf("Writer[%lu]: \"Written %d on the queue.\"\n", pthread_self(), tmp);
     }
     return NULL;
 }
@@ -62,14 +62,14 @@ void *reader (void *arg)
     int i;
     for (i = 0; i < N_READER_ITERATIONS; i++)
     {
+        pausetta(1000, 5000);                         // Pause for a random time
         DataStruct* data = (DataStruct*)xQueue_Get(queue);      // Get the Data object from the top of the queue
         if(data != NULL)
         {
-            printf("Reader[%lu]: read %d from the queue.\n", pthread_self(), data->value);
+            printf("Reader[%lu]: \"Read %d from the queue.\"\n", pthread_self(), data->value);
             //printData(data);
             destroyData(data);
         }
-        pausetta(100, 500);
     }
     return NULL;
 }
