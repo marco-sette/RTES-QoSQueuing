@@ -1,13 +1,6 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <semaphore.h>
-#include <unistd.h>
-
 #include "Examples.hpp"
-#include "QoSQueue.hpp"
+
+sem_t mutex, write_sem, read_sem;
 
 // A function that shuffles the elements of an array till n
 void shuffle (void *array[], size_t n)
@@ -39,69 +32,80 @@ static void pausetta (const unsigned int lower, const unsigned int upper)
     usleep (time * 1000);
 }
 
-static QueueHandle_t QoSQueue;     // Queue handle
-static sem_t sem;               // Semaphore
 
 // A function that writes elements on the queue
 void *writer(void *arg)
 {
-    int nb_writer = *(int *)arg;
-
-    for(int i = 0; i < N_WRITES; i++)
+    CircularQueue_t* queue = (CircularQueue_t*)arg;
+    int i;
+    for (i = 0; i < 10; i++)
     {
-        Temp_t elem;
-        elem.a = (double) randomInt (0, 100)/100;
-        elem.b = elem.a * 2.0;
-        snprintf (elem.name, 16, "Elemento[%d]", nb_writer + i);
-        printf ("Writer [%d] : \"Writing on the buffer...\"\r\n", nb_writer);
-        QoSQueueReturn_t retval = QoSQueue_Put (queue, &elem);
-
-        switch(retval)
-        {
-        case QUEUE_OK:
-            printf ("Writer [%d] : \"Written the element (%.2f, %.2f, %s) on the buffer!\"\r\n", nb_writer, elem.a, elem.b, elem.name);
-            break;
-
-        case QUEUE_FULL:
-            printf ("Writer [%d] : \"The buffer is full! Cannot write the element on the buffer\"\r\n", nb_writer);
-            break;
-
-        default:
-            printf ("Writer [%d] : \"Unknown error during Queue_Put()!\"\r\n", nb_writer);
-            break;
-        }
-        pausetta (100, 500);
+        int tmp = randomInt(0, 100);                // Generate a random integer
+        DataStruct* data = newData(0, tmp);         // Create a new Data object
+        xQueue_Put(queue, data);                    // Put the Data object on the bottom of the queue
+        printf("Writer[%lu]: written %d on the queue.\n", pthread_self(), tmp);     // Print the value written
+        pausetta(100, 500);                         // Pause for a random time
     }
     return NULL;
 }
 
 void *reader (void *arg)
 {
-    int nb_reader = *(int *)arg;
-
-    int nb_cycles = N_WRITES;
-    while ( (Queue_IsEmpty(queue) != True) || (nb_cycles > 0))
+    CircularQueue_t* queue = (CircularQueue_t*)arg;
+    int i;
+    for (i = 0; i < 10; i++)
     {
-        nb_cycles--;
-        printf ("Reader [%d] : \"Reading from the buffer...\"\r\n", nb_reader);
-        Temp_t elem;
-        QoSQueueReturn_t retval = QoSQueue_Get (queue, &elem);
-        
-        switch(retval)
+        DataStruct* data = (DataStruct*)xQueue_Get(queue);      // Get the Data object from the top of the queue
+        if(data != NULL)
         {
-            case QUEUE_OK:
-                printf ("Reader [%d] : \"Read the element (%.2f, %.2f, %s) from the buffer!\"\r\n", nb_reader, elem.a, elem.b, elem.name);
-                break;
-
-            case QUEUE_EMPTY:
-                printf ("Reader [%d] : \"The buffer is empty! Cannot read the element from the buffer\"\r\n", nb_reader);
-                break;
-
-            default:
-                printf ("Reader [%d] : \"Unknown error during Queue_Get()!\"\r\n", nb_reader);
-                break;
+            printf("Reader[%lu]: read %d from the queue.\n", pthread_self(), data->value);
+            //printData(data);
+            destroyData(data);
         }
-        pausetta (100, 500);
+        pausetta(100, 500);
     }
     return NULL;
+}
+
+void Queue_test(void)
+{
+    srand((unsigned int)time(NULL));
+    pthread_t writers[N_WRITERS];
+    pthread_t readers[N_READERS];
+
+    sem_init(&mutex, 0, 1);
+    sem_init(&write_sem, 0, 1);
+    sem_init(&read_sem, 0, 1);
+
+
+    CircularQueue_t* queue = xQueue_Init(MAX_SIZE);
+
+    int i;
+    for( i = 0; i < N_WRITERS; i++)
+    {
+        pthread_create(&writers[i], NULL, writer, queue);
+    }
+
+    for( i = 0; i < N_READERS; i++)
+    {
+        pthread_create(&readers[i], NULL, reader, queue);
+    }
+
+    for( i = 0; i < N_WRITERS; i++)
+    {
+        pthread_join(writers[i], NULL);
+    }
+
+    for( i = 0; i < N_READERS; i++)
+    {
+        pthread_join(readers[i], NULL);
+    }
+
+    sem_destroy(&mutex);
+    sem_destroy(&write_sem);
+    sem_destroy(&read_sem);
+
+    xQueue_Delete(queue);
+
+    printf("Queue test completed.\n");
 }

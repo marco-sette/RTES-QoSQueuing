@@ -1,0 +1,10 @@
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.json
+build/DataStr.o
+build/Examples.o
+build/main.o
+build/QoSQueue.o
+build/Runnable.out
+.vscode/tasks.json

@@ -5,16 +5,12 @@ using namespace std;
 
 
 
-int main() {
-    
-    std::cout << "RTES Project" << std::endl;
+int main() 
+{
+    printf("-----------RTES QoSQueuing---------\n");
+    printf("A Real Time Embedded System Project for QoS Queuing\n");
 
-    std::cout << "Testing writing on the queue" << std::endl;
-    //WRITE_EXAMPLE();
+    printf("Here's an example of how to use the QoSQueue\n");
 
-    std::cout << "Testing reading from the queue" << std::endl;
-    //READ_EXAMPLE();
-
-    //std::cout << "Test: Hello World!" << std::endl;
-    return 0;
+    Queue_test();
 }

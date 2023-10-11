@@ -1,35 +1,27 @@
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <semaphore.h>
+#include <stdlib.h>
+#include <stdio.h>
 
+#ifndef DATA_STRUCT_HPP
+#define DATA_STRUCT_HPP
 
-typedef sem_t* DS_sem_t;
+typedef struct
+{
+    int type;       // Field to identify the type of the message
+    // Add specific data fields here
+    // For example, int value for an integer message
+    int value;
+    // char* value for a string message
+} DataStruct;
 
-typedef enum {
-    true_DS,
-    false_DS,
-    error_DS = -1
-} statesDS_t;
+// Function to create a new Data object
+DataStruct* newData(int type, int value);
 
-typedef struct DS_buffer_t {
-    DS_sem_t sem;
+// Function to destroy a Data object
+void destroyData(DataStruct* data);
 
-    int8_t *ptrBfr_start;
+#endif // DATA_STRUCT_HPP
 
-    int32_t ind_head, ind_tail;
-
-    size_t max_elements, num_elements, size_elements; // # of elements, massimo # of elements, dimension elem
-
-} DS_buffer_t;
-
-DS_buffer_t *DS_Init(const char *name_Init, const size_t numMaxElements, const size_t sizeElement);
-
-statesDS_t DS_Full(DS_buffer_t *buffer);    //const?
-statesDS_t DS_Empty(DS_buffer_t *buffer);   //const?
-statesDS_t DS_Delete(DS_buffer_t *buffer);
-
-void DS_GetHead(DS_buffer_t *buffer);
-void DS_GetTail(DS_buffer_t *buffer);
-
-size_t DS_GetRemainingSpace(DS_buffer_t *buffer);
+// Function to print a Data object
+void printData(DataStruct* data);

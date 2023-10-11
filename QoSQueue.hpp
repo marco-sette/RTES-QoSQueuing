@@ -4,53 +4,36 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <pthread.h>
+#include <stdlib.h>
 #include <semaphore.h>
+#include <string.h>
 #include "Examples.hpp"
 
-#include "DataStr.hpp"
-
-
-// Here we define all the return values of the functions
-typedef enum
-{
-    QUEUE_OK = 0,
-    QUEUE_FULL,
-    QUEUE_EMPTY,
-    QUEUE_ERROR = -1,
-} QoSQueueReturn_t;
-
-typedef sem_t* Queue_sem_t;
-
-// Struct used to handle the queue
 typedef struct
 {
-    void *data;
-    Queue_sem_t semHandle;
-    size_t elemSize;
-} Handler_t;
+    void** buffer;
+    int capacity;
+    int front;
+    int rear;
+} CircularQueue_t;
 
-// New handler 
-typedef Handler_t *QueueHandle_t;
-
-
-// Create a new queue, given the size of the queue, a name and the size of the elements
-QueueHandle_t xQueueCreate(const size_t queueSize, const size_t elemSize, const char *name);
+// Queue initialization
+CircularQueue_t* xQueue_Init(const int capacity);
 
 // Check if the queue is full
-QoSQueueReturn_t xQueue_IsFull(QueueHandle_t queue);
+int xQueue_IsFull(CircularQueue_t *queue);
 
 // Check if the queue is empty
-QoSQueueReturn_t xQueue_IsEmpty(QueueHandle_t queue);
+int xQueue_IsEmpty(CircularQueue_t *queue);
 
 // Put an element in the queue
-QoSQueueReturn_t xQueue_Put(QueueHandle_t queue, const void *ptrElem);
+void xQueue_Put(CircularQueue_t *queue, void *data);
    
 // Get an element from the queue
-QoSQueueReturn_t xQueue_Get(QueueHandle_t queue, void *ptrDest);
+void* xQueue_Get(CircularQueue_t *queue);
 
 // Delete the queue
-QoSQueueReturn_t xQueue_Delete(QueueHandle_t queue);
-
+void xQueue_Delete(CircularQueue_t *queue);
 
 
 #endif /* QOSQUEUE_H_ */
