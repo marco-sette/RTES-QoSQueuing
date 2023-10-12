@@ -35,8 +35,16 @@ int main()
             case 2:
                 std::cout << "Choose the number of writers: ";
                 std::cin >> N_WRITERS;
+                if(N_WRITERS <= 0){
+                    std::cout << "Invalid choice.\n";
+                    return 1;
+                }
                 std::cout << "Choose the number of readers: ";
                 std::cin >> N_READERS;
+                if(N_READERS <= 0){
+                    std::cout << "Invalid choice.\n";
+                    return 1;
+                }
                 std::cout << "What's your history policy? 1. Keep all 2. Keep last: \n";
                 std::cin >> history_policy;
                 if(history_policy == 1)
@@ -44,15 +52,32 @@ int main()
                     std::cout << "Choosing the default (10) for your queue depth...\n";
                     MAX_SIZE = 10;
                 }
-                else
+                else if (history_policy == 2)
                 {
                     std::cout << "What's your depth? \n";
                     std::cin >> MAX_SIZE;
+                    if(MAX_SIZE <= 0){
+                        std::cout << "Invalid choice.\n";
+                        return 1;
+                    }
                 }
+                else
+                {
+                    std::cout << "Invalid choice.\n";
+                    return 1;
+                } 
                 std::cout << "Choose the number of iterations for each writer: ";
                 std::cin >> N_WRITER_ITERATIONS;
+                if(N_WRITER_ITERATIONS <= 0){
+                    std::cout << "Invalid choice.\n";
+                    return 1;
+                }
                 std::cout << "Choose the number of iterations for each reader: ";
                 std::cin >> N_READER_ITERATIONS;
+                if(N_READER_ITERATIONS <= 0){
+                    std::cout << "Invalid choice.\n";
+                    return 1;
+                }
                 std::cout << "Running the example with your parameters\n";
                 Queue_test2(N_WRITERS, N_READERS, MAX_SIZE, N_WRITER_ITERATIONS, N_READER_ITERATIONS);
                 break;
