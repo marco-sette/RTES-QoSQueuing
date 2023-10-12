@@ -12,3 +12,5 @@ Open a terminal and execute: \
     - make all, if you want to compile the entire project \
     - make run, if you want to execute the output file \
     - make clean, if you want to delete previously generated output files \
+
+After that, you can run the program with "/build/Runnable.out", following the main menu.
