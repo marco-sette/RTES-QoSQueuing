@@ -166,8 +166,4 @@ void Queue_test2(int writers, int readers, int size, int writer_iterations, int 
 
 }
 
-void Queue_Manual(int writers, int readers, int size, int writer_iterations, int reader_iterations)
-{
-    
-}
 

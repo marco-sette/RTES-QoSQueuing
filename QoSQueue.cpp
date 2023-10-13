@@ -71,13 +71,7 @@ void* xQueue_Get (CircularQueue_t *queue)
 // Deletes the queue
 void xQueue_Delete (CircularQueue_t *queue)
 {
-    if (queue)
-    {
-        if (queue->buffer)
-        {
-            free(queue->buffer);
-        }
-        free(queue);
-    }
+    free(queue->buffer);
+    free(queue);
 }
 

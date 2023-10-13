@@ -89,6 +89,7 @@ int main()
             default:
                 std::cout << "Invalid choice. Try again.\n";
                 break;
-        }    
+        }
+
     return 0;
 }
