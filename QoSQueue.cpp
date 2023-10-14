@@ -1,3 +1,15 @@
+/*
+** RTES-QoSQueuing: QoSQueue.cpp - Queue for RTES-QoSQueuing, Circular Buffer implementation
+** ==========================================================================
+** RTES-QoSQueuing - A simple RTES-QoSQueuing implementation for Linux
+** ==========================================================================
+** Authors: Francesco Sartor, Marco Francesco Sette
+** Real-Time and Embedded Systems Project - University of Modena and Reggio Emilia
+** Prof. Marko Bertogna and Prof. Paolo Burgio
+** A.Y. 2022-2023
+*/
+
+
 using namespace std;
 #include <iostream>
 

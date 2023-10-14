@@ -1,33 +1,26 @@
+/*
+** RTES-QoSQueuing: Examples.cpp - Examples for RTES-QoSQueuing implementation
+** ==========================================================================
+** RTES-QoSQueuing - A simple RTES-QoSQueuing implementation for Linux
+** ==========================================================================
+** Authors: Francesco Sartor, Marco Francesco Sette
+** Real-Time and Embedded Systems Project - University of Modena and Reggio Emilia
+** Prof. Marko Bertogna and Prof. Paolo Burgio
+** A.Y. 2022-2023
+*/
+
 using namespace std;
 #include <iostream>
 
 #include "Examples.hpp"
 
-sem_t mutex, write_sem, read_sem;
+sem_t mutexw, mutexr, sempty, sfull;
 
 int N_WRITERS = 15;
 int N_READERS = 15;
 int MAX_SIZE = 10;
-int N_WRITER_ITERATIONS = 10;
-int N_READER_ITERATIONS = 10;
+int N_WRITES = 1;
 
-
-// A function that shuffles the elements of an array till n
-void shuffle (void *array[], size_t n)
-{
-    srand((unsigned int)time(NULL));
-    if (n > 1) 
-    {
-        size_t i;
-        for (i = 0; i < n - 1; i++) 
-        {
-          size_t j = i + rand() / (RAND_MAX / (n - i) + 1);
-          void *t = array[j];
-          array[j] = array[i];
-          array[i] = t;
-        }
-    }
-}
 
 // A function that returns a random integer between lower and upper
 static unsigned int randomInt (const unsigned int lower, const unsigned int upper)
@@ -36,7 +29,7 @@ static unsigned int randomInt (const unsigned int lower, const unsigned int uppe
 }
 
 // A function that pauses for a random time between lower and upper
-static void pausetta (const unsigned int lower, const unsigned int upper)
+static void timed_wait (const unsigned int lower, const unsigned int upper)
 {
     unsigned int time = randomInt (lower, upper);
     usleep (time * 1000);
@@ -47,25 +40,43 @@ static void pausetta (const unsigned int lower, const unsigned int upper)
 void *writer(void *arg)
 {
     CircularQueue_t* queue = (CircularQueue_t*)arg;
-    int i, tmp;
-    for (i = 0; i < N_WRITER_ITERATIONS; i++)
+    int i=0, tmp;
+    while(i<N_WRITES)
     {
-        pausetta(1000, 5000);                         // Pause for a random time
+        timed_wait(100, 500);                         // Pause for a random time (simulates an operation)
+
+        // Generate a random message
         tmp = randomInt(0, 100);                // Generate a random integer
         DataStruct* data = newData(0, tmp);         // Create a new Data object
+
+        sem_wait(&sempty);                               // Wait for an empty slot
+        sem_wait(&mutexw);                               // Lock the queue
+
+        // Write the message on the queue
         xQueue_Put(queue, data);                    // Put the Data object on the bottom of the queue
         std::cout << "Writer[" << pthread_self() << "]: \"Written " << tmp << " on the queue.\"" << std::endl;
+
+
+        sem_post(&mutexw);                               // Unlock the queue
+        sem_post(&sfull);                                // Signal that the queue is not empty
+
+        i++;
     }
-    return NULL;
+    pthread_exit(NULL);
 }
 
 void *reader (void *arg)
 {
     CircularQueue_t* queue = (CircularQueue_t*)arg;
-    int i;
-    for (i = 0; i < N_READER_ITERATIONS; i++)
+    int i = 0;
+    while (i < N_WRITES * N_WRITERS / N_READERS)
     {
-        pausetta(1000, 5000);                         // Pause for a random time
+        timed_wait(100, 500);                         // Pause for a random time (simulates an operation)
+
+        sem_wait(&sfull);                                // Wait for a full slot
+        sem_wait(&mutexr);                               // Lock the queue
+
+        // Read the message from the queue
         DataStruct* data = (DataStruct*)xQueue_Get(queue);      // Get the Data object from the top of the queue
         if(data != NULL)
         {
@@ -73,8 +84,13 @@ void *reader (void *arg)
             //printData(data);
             destroyData(data);
         }
+
+        sem_post(&mutexr);                               // Unlock the queue
+        sem_post(&sempty);                               // Signal that the queue is not full
+        
+        i++;
     }
-    return NULL;
+    pthread_exit(NULL);
 }
 
 void Queue_test(void)
@@ -83,9 +99,10 @@ void Queue_test(void)
     pthread_t writers[N_WRITERS];
     pthread_t readers[N_READERS];
 
-    sem_init(&mutex, 0, 1);
-    sem_init(&write_sem, 0, 1);
-    sem_init(&read_sem, 0, 1);
+    sem_init(&mutexw, 0, 1);
+    sem_init(&mutexr, 0, 1);
+    sem_init(&sempty, 0, MAX_SIZE);
+    sem_init(&sfull, 0, 0);
 
 
     CircularQueue_t* queue = xQueue_Init(MAX_SIZE);
@@ -111,29 +128,28 @@ void Queue_test(void)
         pthread_join(readers[i], NULL);
     }
 
-    sem_destroy(&mutex);
-    sem_destroy(&write_sem);
-    sem_destroy(&read_sem);
-
     xQueue_Delete(queue);
+    
+    sem_destroy(&mutexw);
+    sem_destroy(&mutexr);
+    sem_destroy(&sempty);
+    sem_destroy(&sfull);
 
     std::cout << "Queue test completed." << std::endl << std::endl;
 }
 
-void Queue_test2(int writers, int readers, int size, int writer_iterations, int reader_iterations)
+void Queue_test2(int writers, int readers, int size)
 {
     srand((unsigned int)time(NULL));
     pthread_t writers_t[writers];
     pthread_t readers_t[readers];
 
-    sem_init(&mutex, 0, 1);
-    sem_init(&write_sem, 0, 1);
-    sem_init(&read_sem, 0, 1);
+    sem_init(&mutexw, 0, 1);
+    sem_init(&mutexr, 0, 1);
+    sem_init(&sempty, 0, size);
+    sem_init(&sfull, 0, 0);
 
     CircularQueue_t* queue = xQueue_Init(size);
-
-    N_WRITER_ITERATIONS = writer_iterations;
-    N_READER_ITERATIONS = reader_iterations;
 
     int i;
     for( i = 0; i < writers; i++)
@@ -156,11 +172,12 @@ void Queue_test2(int writers, int readers, int size, int writer_iterations, int 
         pthread_join(readers_t[i], NULL);
     }
 
-    sem_destroy(&mutex);
-    sem_destroy(&write_sem);
-    sem_destroy(&read_sem);
-
     xQueue_Delete(queue);
+
+    sem_destroy(&mutexw);
+    sem_destroy(&mutexr);
+    sem_destroy(&sempty);
+    sem_destroy(&sfull);
 
     std::cout << "Queue test completed."  << std::endl << std::endl;
 

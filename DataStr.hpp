@@ -1,3 +1,14 @@
+/*
+** RTES-QoSQueuing: DataStr.hpp - Data structure for RTES-QoSQueuing
+** ==========================================================================
+** RTES-QoSQueuing - A simple RTES-QoSQueuing implementation for Linux
+** ==========================================================================
+** Authors: Francesco Sartor, Marco Francesco Sette
+** Real-Time and Embedded Systems Project - University of Modena and Reggio Emilia
+** Prof. Marko Bertogna and Prof. Paolo Burgio
+** A.Y. 2022-2023
+*/
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>

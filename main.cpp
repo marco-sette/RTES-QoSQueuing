@@ -1,3 +1,14 @@
+/*
+** RTES-QoSQueuing: main.cpp - Main file for RTES-QoSQueuing
+** ==========================================================================
+** RTES-QoSQueuing - A simple RTES-QoSQueuing implementation for Linux
+** ==========================================================================
+** Authors: Francesco Sartor, Marco Francesco Sette
+** Real-Time and Embedded Systems Project - University of Modena and Reggio Emilia
+** Prof. Marko Bertogna and Prof. Paolo Burgio
+** A.Y. 2022-2023
+*/
+
 #include <iostream>
 #include <stdio.h>
 #include "Examples.hpp"
@@ -11,7 +22,7 @@ int main()
     std::cout << "Developed by: Francesco Sartor & Marco Francesco Sette"<<endl;
 
     int mainchoice, history_policy;
-    int N_WRITERS, N_READERS, MAX_SIZE, N_WRITER_ITERATIONS, N_READER_ITERATIONS;
+    int N_WRITERS, N_READERS, MAX_SIZE;
 
     do
         {
@@ -33,7 +44,7 @@ int main()
                 break;
 
             case 2:
-                std::cout << "Choose the number of writers: ";
+                std::cout << "Choose the number of writers (must be greater or equal the number of readers): ";
                 std::cin >> N_WRITERS;
                 if(N_WRITERS <= 0){
                     std::cout << "Invalid choice.\n";
@@ -41,7 +52,7 @@ int main()
                 }
                 std::cout << "Choose the number of readers: ";
                 std::cin >> N_READERS;
-                if(N_READERS <= 0){
+                if(N_READERS <= 0 || N_READERS > N_WRITERS){
                     std::cout << "Invalid choice.\n";
                     return 1;
                 }
@@ -65,21 +76,9 @@ int main()
                 {
                     std::cout << "Invalid choice.\n";
                     return 1;
-                } 
-                std::cout << "Choose the number of iterations for each writer: ";
-                std::cin >> N_WRITER_ITERATIONS;
-                if(N_WRITER_ITERATIONS <= 0){
-                    std::cout << "Invalid choice.\n";
-                    return 1;
-                }
-                std::cout << "Choose the number of iterations for each reader: ";
-                std::cin >> N_READER_ITERATIONS;
-                if(N_READER_ITERATIONS <= 0){
-                    std::cout << "Invalid choice.\n";
-                    return 1;
                 }
                 std::cout << "Running the example with your parameters\n";
-                Queue_test2(N_WRITERS, N_READERS, MAX_SIZE, N_WRITER_ITERATIONS, N_READER_ITERATIONS);
+                Queue_test2(N_WRITERS, N_READERS, MAX_SIZE);
                 break;
 
             case 3:
@@ -91,5 +90,6 @@ int main()
                 break;
         }
 
+    sleep(5);
     return 0;
 }
