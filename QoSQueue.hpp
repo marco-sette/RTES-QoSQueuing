@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <semaphore.h>
 #include <string.h>
-#include "Examples.hpp"
+#include "QoSAccess.hpp"
 
 typedef struct
 {

@@ -84,6 +84,8 @@ void* xQueue_Get (CircularQueue_t *queue)
 void xQueue_Delete (CircularQueue_t *queue)
 {
     free(queue->buffer);
+    queue->buffer = NULL;
     free(queue);
+    queue = NULL;
 }
 

@@ -11,7 +11,7 @@
 
 #include <iostream>
 #include <stdio.h>
-#include "Examples.hpp"
+#include "QoSAccess.hpp"
 
 using namespace std;
 
@@ -56,7 +56,7 @@ int main()
                     std::cout << "Invalid choice.\n";
                     return 1;
                 }
-                std::cout << "What's your history policy? 1. Keep all 2. Keep last: \n";
+                std::cout << "What's your history policy? 1. Keep all 2. Keep last: ";
                 std::cin >> history_policy;
                 if(history_policy == 1)
                 {
@@ -65,7 +65,7 @@ int main()
                 }
                 else if (history_policy == 2)
                 {
-                    std::cout << "What's your depth? \n";
+                    std::cout << "What's your depth? ";
                     std::cin >> MAX_SIZE;
                     if(MAX_SIZE <= 0){
                         std::cout << "Invalid choice.\n";
@@ -89,7 +89,5 @@ int main()
                 std::cout << "Invalid choice. Try again.\n";
                 break;
         }
-
-    sleep(5);
     return 0;
 }

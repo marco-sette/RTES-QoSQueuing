@@ -8,7 +8,7 @@ LFLAGS = -lpthread
 
 LIBS = 
 
-SRCS = main.cpp QoSQueue.cpp Examples.cpp DataStr.cpp
+SRCS = main.cpp QoSQueue.cpp QoSAccess.cpp DataStr.cpp
 
 OUTDIR = ./build
 

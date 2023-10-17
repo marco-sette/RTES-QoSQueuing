@@ -1,5 +1,5 @@
 /*
-** RTES-QoSQueuing: Examples.hpp - Examples for RTES-QoSQueuing
+** RTES-QoSQueuing: QoSAccess.hpp - QoSAccess for RTES-QoSQueuing, declaration
 ** ==========================================================================
 ** RTES-QoSQueuing - A simple RTES-QoSQueuing implementation for Linux
 ** ==========================================================================
@@ -9,8 +9,8 @@
 ** A.Y. 2022-2023
 */
 
-//#ifdef EXAMPLES_H
-//#define EXAMPLES_H
+//#ifdef QOSACCESS_H
+//#define QOSACCESS_H
 
 #include <stddef.h>
 #include <stdlib.h>
@@ -32,4 +32,4 @@ void Queue_test(void);
 void Queue_test2(int N_WRITERS, int N_READERS, int MAX_SIZE);
 
 
-//#endif // EXAMPLES_H
+//#endif // QOSACCESS_H

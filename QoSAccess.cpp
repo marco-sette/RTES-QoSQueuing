@@ -1,5 +1,5 @@
 /*
-** RTES-QoSQueuing: Examples.cpp - Examples for RTES-QoSQueuing implementation
+** RTES-QoSQueuing: QoSAccess.cpp - functions providing access to the queue
 ** ==========================================================================
 ** RTES-QoSQueuing - A simple RTES-QoSQueuing implementation for Linux
 ** ==========================================================================
@@ -12,7 +12,7 @@
 using namespace std;
 #include <iostream>
 
-#include "Examples.hpp"
+#include "QoSAccess.hpp"
 
 sem_t mutexw, mutexr, sempty, sfull;
 

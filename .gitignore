@@ -8,3 +8,4 @@ build/main.o
 build/QoSQueue.o
 build/Runnable.out
 .vscode/tasks.json
+build/QoSAccess.o
