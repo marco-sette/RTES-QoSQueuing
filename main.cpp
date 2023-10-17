@@ -39,7 +39,7 @@ int main()
         switch(mainchoice)
         {
             case 1:
-                std::cout << "Running the example with default parameters (15 writers and 15 readers, 10 max size, 10 iterations for each writer and reader)\n";
+                std::cout << "Running the example with default parameters (15 writers and 15 readers, 10 max size, 1 iteration for each writer and reader)\n";
                 Queue_test();
                 break;
 
